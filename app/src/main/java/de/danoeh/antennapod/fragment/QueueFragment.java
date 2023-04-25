@@ -479,6 +479,7 @@ public class QueueFragment extends Fragment implements MaterialToolbar.OnMenuIte
         speedDialView.removeActionItemById(R.id.mark_unread_batch);
         speedDialView.removeActionItemById(R.id.add_to_queue_batch);
         speedDialView.removeActionItemById(R.id.remove_all_inbox_item);
+        // TODO: need to removeActionItemById(R.id.send_to_top_batch) on all other spawns of this speeddial
         speedDialView.setOnChangeListener(new SpeedDialView.OnChangeListener() {
             @Override
             public boolean onMainActionSelected() {

@@ -45,6 +45,10 @@ public class EpisodeMultiSelectActionHandler {
             downloadChecked(items);
         } else if (actionId == R.id.delete_batch) {
             deleteChecked(items);
+        } else if (actionId == R.id.send_to_top_batch) {
+            sendToChecked(items, true);
+        } else if (actionId == R.id.send_to_bottom_batch) {
+            sendToChecked(items, false);
         } else {
             Log.e(TAG, "Unrecognized speed dial action item. Do nothing. id=" + actionId);
         }
@@ -112,6 +116,22 @@ public class EpisodeMultiSelectActionHandler {
             }
         }
         showMessage(R.plurals.deleted_multi_episode_batch_label, countHasMedia);
+    }
+
+    private void sendToChecked(List<FeedItem> items, boolean sendToTop) {
+        // Check if an episode actually contains any media files before adding it to queue
+        LongList toQueue = new LongList(items.size());
+        for (FeedItem episode : items.reverse()) {
+            if (episode.hasMedia()) {
+                if (sendToTop) {
+                    toQueue.insert(episode.getId(), 0);
+                } else {
+                    toQueue.add(episode.getId());
+                }
+            }
+        }
+        DBWriter.addQueueItem(activity, true, toQueue.toArray()); // FIXME: prescribe start/end insertion to DBWriter
+        showMessage(R.plurals.added_to_queue_batch_label, toQueue.size()); // FIXME
     }
 
     private void showMessage(@PluralsRes int msgId, int numItems) {
